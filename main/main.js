@@ -22,3 +22,26 @@ function divideIntoMetric(number) {
     return numberMetricList;
 }
 
+function doTranslate(numberMetricList) {
+
+    var numberStrList = [];
+
+    var dictonary = loadDictionary();
+
+    if (numberMetricList.length === 1 && numberMetricList[0] === 0) {
+        return [dictonary.ZERO];
+    }
+
+    for (var i = 0; i < numberMetricList.length; i ++) {
+        if (numberMetricList[i] === 0) {
+            continue;
+        } else {
+            var hundredStr = translateHundreds(parseInt(numberMetricList[i] / 100), dictonary.engDigits);
+            var tensStr = translateTens(parseInt(numberMetricList[i] % 100), dictonary.engDigits, dictonary.engTens);
+            var numberStr = connect(hundredStr, tensStr, dictonary.metrics[i]);
+            numberStrList.push(numberStr);
+        }
+    }
+
+    return numberStrList;
+}
