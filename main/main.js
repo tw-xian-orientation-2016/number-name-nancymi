@@ -45,3 +45,11 @@ function doTranslate(numberMetricList) {
 
     return numberStrList;
 }
+
+function translateHundreds(hundreds, engDigits) {
+    if(hundreds === 0) {
+        return '';
+    } else {
+        return engDigits[hundreds] + ' hundred';
+    }
+}
