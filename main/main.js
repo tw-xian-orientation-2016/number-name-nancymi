@@ -69,3 +69,26 @@ function translateTens(tens, engDigits, engTens) {
 
     return tensStr;
 }
+
+function connect(hundredStr, tensStr, metric) {
+    var numberStr = '';
+
+    if (hundredStr !== '') {
+        numberStr += hundredStr + ' ';
+    }
+
+    if (tensStr !== '') {
+        if (numberStr !== '') {
+            numberStr += 'and ';
+        }
+        numberStr += tensStr + ' ';
+    }
+
+    if (metric != '') {
+        numberStr += metric + ' ';
+    }
+
+    numberStr = numberStr.substring(0, numberStr.length-1);
+
+    return numberStr;
+}
