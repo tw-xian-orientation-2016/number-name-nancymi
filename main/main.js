@@ -92,3 +92,22 @@ function connect(hundredStr, tensStr, metric) {
 
     return numberStr;
 }
+
+function getNumberStr(numberStrList) {
+    var numberStr = '';
+    numberStrList.forEach(function(numberUnitStr) {
+        if (numberUnitStr.match(' and ')) {
+            numberStr = ', ' + numberUnitStr + numberStr;
+        } else {
+            numberStr = ' and ' + numberUnitStr + numberStr;
+        }
+    });
+
+    if (numberStr.indexOf(',') === 0) {
+        numberStr = numberStr.substring(2);
+    } else {
+        numberStr = numberStr.substring(5);
+    }
+
+    return numberStr;
+}
