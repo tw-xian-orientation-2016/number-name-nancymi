@@ -53,3 +53,19 @@ function translateHundreds(hundreds, engDigits) {
         return engDigits[hundreds] + ' hundred';
     }
 }
+
+function translateTens(tens, engDigits, engTens) {
+
+    var tensStr = '';
+
+    if (tens === 0) {
+    } else if (tens < 20) {
+        tensStr =  engDigits[tens];
+    } else if (tens%10 === 0){
+        tensStr = engTens[parseInt(tens/10)];
+    } else {
+        tensStr = engTens[parseInt(tens/10)] + ' ' + engDigits[tens%10];
+    }
+
+    return tensStr;
+}
