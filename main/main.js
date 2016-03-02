@@ -33,40 +33,38 @@ function doTranslate(numberMetricList, loadDictionary) {
         return [dictonary.ZERO];
     }
 
-    for (var i = 0; i < numberMetricList.length; i ++) {
-        if (numberMetricList[i] === 0) {
-            continue;
-        } else {
-            var hundredVal = parseInt(numberMetricList[i] / 100);
-            var tensVal = numberMetricList[i] % 100;
+    numberMetricList.forEach(function(numberMetric, index) {
+        if(numberMetric !== 0) {
+            var hundredVal = parseInt(numberMetric / 100);
+            var tensVal = numberMetric % 100;
             var hundredValStr = translateHundreds(hundredVal, dictonary.engDigits);
             var tensValStr = translateTens(tensVal, dictonary.engDigits, dictonary.engTens);
-            var numberStr = connect(hundredValStr, tensValStr, dictonary.metrics[i]);
+            var numberStr = connect(hundredValStr, tensValStr, dictonary.metrics[index]);
             numberStrList.push(numberStr);
         }
-    }
+    });
 
     return numberStrList;
 }
 
-function translateHundreds(hundredVal, engDigits) {
+function translateHundreds(hundredVal, digitsEng) {
 
-    var hundredStr = hundredVal ? engDigits[hundredVal] + ' hundred' : '';
+    var hundredStr = hundredVal ? digitsEng[hundredVal] + ' hundred' : '';
 
     return hundredStr;
 }
 
-function translateTens(tensVal, engDigits, engTens) {
+function translateTens(tensVal, digitsEng, tensEng) {
 
     var tensStr = '';
-    var tenVal = parseInt(tensVal/10), digitVal = parseInt(tensVal%10);
+    var tenVal = parseInt(tensVal/10), digitVal = tensVal%10;
 
     if (tensVal < 20) {
-        tensStr =  engDigits[tensVal];
+        tensStr =  digitsEng[tensVal];
     } else if (digitVal){
-        tensStr = engTens[tenVal] + ' ' + engDigits[digitVal];
+        tensStr = tensEng[tenVal] + ' ' + digitsEng[digitVal];
     } else {
-        tensStr = engTens[tenVal];
+        tensStr = tensEng[tenVal];
     }
 
     return tensStr;
