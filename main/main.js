@@ -82,14 +82,14 @@ function translateHundreds(hundredVal, engDigits) {
 function translateTens(tensVal, engDigits, engTens) {
 
     var tensStr = '';
-    var tensVal = parseInt(tensVal/10), digitsVal = parseInt(tensVal%10);
+    var tenVal = parseInt(tensVal/10), digitVal = parseInt(tensVal%10);
 
     if (tensVal < 20) {
         tensStr =  engDigits[tensVal];
-    } else if (digitsVal){
-        tensStr = engTens[tensVal] + ' ' + engDigits[digitsVal];
+    } else if (digitVal){
+        tensStr = engTens[tenVal] + ' ' + engDigits[digitVal];
     } else {
-        tensStr = engTens[tensVal];
+        tensStr = engTens[tenVal];
     }
 
     return tensStr;
