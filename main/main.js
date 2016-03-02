@@ -2,17 +2,41 @@
  * Created by nancymi on 16/2/29.
  */
 
-function translateNumberInEnglish(number) {
-    var numberMetricList = divideIntoMetric(number);
-    var numberStrList = doTranslate(numberMetricList);
-    var numberStr = getNumberStr(numberStrList);
+var MAX_LENGTH = 18;
 
-    return numberStr;
+var UNIT_LENGTH = 3;
+
+function translateNumberInEnglish(number) {
+    if(isLegal(number)) {
+        var numberMetricList = divideIntoMetric(number);
+        var numberStrList = doTranslate(numberMetricList);
+        var numberStr = getNumberStr(numberStrList);
+
+        return numberStr;
+    }
+}
+
+function isLegal(number) {
+    if (!number) {
+        throw 'The number should be a string.'
+    }
+
+    if (number.length > MAX_LENGTH) {
+        throw 'Sorry, the number is too big to translate.'
+    }
+
+    var regExp = new RegExp(/\d+/);
+    if (!regExp.test(number)) {
+        throw 'The number is illegal.';
+    }
+
+    return true;
 }
 
 function divideIntoMetric(number) {
     var numberMetricList = [];
-    for (var i = number.length-3; i > 0; i -= 3) {
+
+    for (var i = number.length - UNIT_LENGTH; i > 0; i -= UNIT_LENGTH) {
         var numberMetric = parseInt(number.substring(i));
         number = number.substring(0, i);
         numberMetricList.push(numberMetric);
@@ -36,9 +60,11 @@ function doTranslate(numberMetricList) {
         if (numberMetricList[i] === 0) {
             continue;
         } else {
-            var hundredStr = translateHundreds(parseInt(numberMetricList[i] / 100), dictonary.engDigits);
-            var tensStr = translateTens(parseInt(numberMetricList[i] % 100), dictonary.engDigits, dictonary.engTens);
-            var numberStr = connect(hundredStr, tensStr, dictonary.metrics[i]);
+            var hundredVal = parseInt(numberMetricList[i] / 100);
+            var tensVal = numberMetricList[i] % 100;
+            var hundredValStr = translateHundreds(hundredVal, dictonary.engDigits);
+            var tensValStr = translateTens(tensVal, dictonary.engDigits, dictonary.engTens);
+            var numberStr = connect(hundredValStr, tensValStr, dictonary.metrics[i]);
             numberStrList.push(numberStr);
         }
     }
@@ -46,68 +72,63 @@ function doTranslate(numberMetricList) {
     return numberStrList;
 }
 
-function translateHundreds(hundreds, engDigits) {
-    if(hundreds === 0) {
-        return '';
-    } else {
-        return engDigits[hundreds] + ' hundred';
-    }
+function translateHundreds(hundredVal, engDigits) {
+
+    var hundredStr = hundredVal ? engDigits[hundredVal] + ' hundred' : '';
+
+    return hundredStr;
 }
 
-function translateTens(tens, engDigits, engTens) {
+function translateTens(tensVal, engDigits, engTens) {
 
     var tensStr = '';
+    var tensVal = parseInt(tensVal/10), digitsVal = parseInt(tensVal%10);
 
-    if (tens === 0) {
-    } else if (tens < 20) {
-        tensStr =  engDigits[tens];
-    } else if (tens%10 === 0){
-        tensStr = engTens[parseInt(tens/10)];
+    if (tensVal < 20) {
+        tensStr =  engDigits[tensVal];
+    } else if (digitsVal){
+        tensStr = engTens[tensVal] + ' ' + engDigits[digitsVal];
     } else {
-        tensStr = engTens[parseInt(tens/10)] + ' ' + engDigits[tens%10];
+        tensStr = engTens[tensVal];
     }
 
     return tensStr;
 }
 
-function connect(hundredStr, tensStr, metric) {
+function connect(hundredValStr, tensValStr, metric) {
+    var numberUnitStrList = [];
     var numberStr = '';
 
-    if (hundredStr !== '') {
-        numberStr += hundredStr + ' ';
+    if (hundredValStr) {
+        numberUnitStrList.push(hundredValStr);
     }
 
-    if (tensStr !== '') {
-        if (numberStr !== '') {
-            numberStr += 'and ';
+    if (tensValStr) {
+        if (hundredValStr) {
+            numberUnitStrList.push('and');
         }
-        numberStr += tensStr + ' ';
+        numberUnitStrList.push(tensValStr);
     }
 
-    if (metric != '') {
-        numberStr += metric + ' ';
+    if (metric) {
+        numberUnitStrList.push(metric);
     }
 
-    numberStr = numberStr.substring(0, numberStr.length-1);
+    numberStr = numberUnitStrList.join(' ');
 
     return numberStr;
 }
 
 function getNumberStr(numberStrList) {
-    var numberStr = '';
+    var numberStr = '', connectStr;
+
     numberStrList.forEach(function(numberUnitStr) {
-        if (numberUnitStr.match(' and ')) {
-            numberStr = ', ' + numberUnitStr + numberStr;
-        } else {
-            numberStr = ' and ' + numberUnitStr + numberStr;
-        }
+        connectStr = numberUnitStr.match(' and ') ? ', ' : ' and ';
+        numberStr = connectStr + numberUnitStr + numberStr;
     });
 
-    if (numberStr.indexOf(',') === 0) {
-        numberStr = numberStr.substring(2);
-    } else {
-        numberStr = numberStr.substring(5);
-    }
+    var interCeption = connectStr.length;
+    numberStr = numberStr.substring(interCeption);
 
     return numberStr;
 }
