@@ -1,11 +1,6 @@
 /**
  * Created by nancymi on 16/2/29.
  */
-
-var MAX_LENGTH = 18;
-
-var UNIT_LENGTH = 3;
-
 function translate(number) {
 
     var numberMetricList = divideIntoMetric(number);
@@ -17,6 +12,7 @@ function translate(number) {
 
 function divideIntoMetric(number) {
     var numberMetricList = [];
+    var UNIT_LENGTH = 3;
 
     for (var i = number.length - UNIT_LENGTH; i > 0; i -= UNIT_LENGTH) {
         var numberMetric = parseInt(number.substring(i));
