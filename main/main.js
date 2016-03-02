@@ -6,32 +6,33 @@ var MAX_LENGTH = 18;
 
 var UNIT_LENGTH = 3;
 
-function translateNumberInEnglish(number) {
-    if(isLegal(number)) {
-        var numberMetricList = divideIntoMetric(number);
-        var numberStrList = doTranslate(numberMetricList);
-        var numberStr = getNumberStr(numberStrList);
+function translate(number) {
+    //if(isLegal(number)) {
+    //
+    //}
+    var numberMetricList = divideIntoMetric(number);
+    var numberStrList = doTranslate(numberMetricList, loadDictionary);
+    var numberStr = getNumberStr(numberStrList);
 
-        return numberStr;
-    }
+    return numberStr;
 }
-
-function isLegal(number) {
-    if (!number) {
-        throw 'The number should be a string.'
-    }
-
-    if (number.length > MAX_LENGTH) {
-        throw 'Sorry, the number is too big to translate.'
-    }
-
-    var regExp = new RegExp(/\d+/);
-    if (!regExp.test(number)) {
-        throw 'The number is illegal.';
-    }
-
-    return true;
-}
+//
+//function isLegal(number) {
+//    if (!number) {
+//        throw 'The number should be a string.'
+//    }
+//
+//    if (number.length > MAX_LENGTH) {
+//        throw 'Sorry, the number is too big to translate.'
+//    }
+//
+//    var regExp = new RegExp(/\d+/);
+//    if (!regExp.test(number)) {
+//        throw 'The number is illegal.';
+//    }
+//
+//    return true;
+//}
 
 function divideIntoMetric(number) {
     var numberMetricList = [];
@@ -46,10 +47,9 @@ function divideIntoMetric(number) {
     return numberMetricList;
 }
 
-function doTranslate(numberMetricList) {
+function doTranslate(numberMetricList, loadDictionary) {
 
     var numberStrList = [];
-
     var dictonary = loadDictionary();
 
     if (numberMetricList.length === 1 && numberMetricList[0] === 0) {
